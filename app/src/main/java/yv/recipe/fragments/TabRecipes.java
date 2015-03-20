@@ -22,10 +22,7 @@ public class TabRecipes extends Fragment {
         chefIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast t = new Toast(getActivity());
-                t.setText("aaaaaaaaaaaa");
-                t.setDuration(Toast.LENGTH_LONG);
-                t.show();
+                Toast.makeText(getActivity(), "Analyzing photo!", Toast.LENGTH_LONG).show();
             }
         });
 
