@@ -36,6 +36,15 @@
             android:layout_weight="1"
             ></android.support.v4.view.ViewPager>
 
+        <ImageButton
+            android:layout_margin="15dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_action_camera"
+            android:background="@drawable/circle"
+            android:id="@+id/imageButton"
+            android:layout_gravity="right|bottom" />
+
     </LinearLayout>
 
 </RelativeLayout>

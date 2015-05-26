@@ -8,13 +8,13 @@
         <!--android:orderInCategory="100"-->
         <!--android:title="@string/action_settings"-->
         <!--app:showAsAction="never" />-->
-    <item
-        android:id="@+id/action_camera"
-        android:orderInCategory="200"
-        android:title="Picture groceries"
-        android:icon="@drawable/ic_action_camera"
-        app:showAsAction="ifRoom"
-        ></item>
+    <!--<item-->
+        <!--android:id="@+id/action_camera"-->
+        <!--android:orderInCategory="200"-->
+        <!--android:title="Picture groceries"-->
+        <!--android:icon="@drawable/ic_action_camera"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--></item>-->
     <item
         android:id="@+id/action_search"
         android:orderInCategory="200"
