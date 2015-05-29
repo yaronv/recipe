@@ -173,7 +173,6 @@ public class MainActivity extends ActionBarActivity {
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//                Log.w("path of image from gallery", picturePath + "");
                 viewImage.setImageBitmap(thumbnail);
                 analyzeIcon.setVisibility(View.VISIBLE);
             }

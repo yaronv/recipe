@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:elevation="2dp"
             android:background="@color/ColorPrimary">
-
         </yv.recipe.layouts.SlidingTabLayout>
 
 

@@ -27,7 +27,6 @@ public class CameraUtils {
     }
 
     public boolean isCameraSupported(Context context) {
-//        Context context = getActivity();
         PackageManager packageManager = context.getPackageManager();
         if(packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) == false){
             Toast.makeText(context, "This device does not have a camera.", Toast.LENGTH_SHORT).show();
