@@ -36,8 +36,6 @@ public class CameraUtils {
     }
 
     public void analyzeImage(Bitmap bitmap, ImageView viewImage) {
-
-//        bitmap.get
         Mat mat = Mat.zeros(viewImage.getHeight(), viewImage.getWidth(), CvType.CV_8UC3);
         Utils.bitmapToMat(bitmap, mat);
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2GRAY);
