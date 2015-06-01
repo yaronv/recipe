@@ -30,8 +30,8 @@ public class TabRecipes extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Analyzing photo...", Toast.LENGTH_LONG).show();
 
-
-//                ImageView analyzeIcon = (ImageView) v.findViewById(R.id.analyze_icon);
+                ImageView analyzeIcon = (ImageView) v.findViewById(R.id.analyze_icon);
+                analyzeIcon.setVisibility(View.GONE);
 
                analyzePhoto(viewImage);
             }
