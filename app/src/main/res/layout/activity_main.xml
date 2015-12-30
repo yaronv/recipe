@@ -1,49 +1,50 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/profile_wrap"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        />
+
+
+    <yv.recipe.layouts.SlidingTabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:background="@color/ColorPrimary">
+    </yv.recipe.layouts.SlidingTabLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        ></android.support.v4.view.ViewPager>
 
-        <include
-            android:id="@+id/tool_bar"
-            layout="@layout/tool_bar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_action_camera"
+        android:baselineAlignBottom="false"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@color/ColorPrimaryLight"
+        app:backgroundTint="@color/FabColor"
+        app:borderWidth="0dp"/>
 
-        <yv.recipe.layouts.SlidingTabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            android:background="@color/ColorPrimary">
-        </yv.recipe.layouts.SlidingTabLayout>
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            ></android.support.v4.view.ViewPager>
-
-        <ImageButton
-            android:layout_margin="15dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@drawable/ic_action_camera"
-            android:background="@drawable/circle"
-            android:id="@+id/imageButton"
-            android:layout_gravity="right|bottom" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import yv.recipe.tasks.GcmRegistrationAsyncTask;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -82,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
 
-        new GcmRegistrationAsyncTask(this).execute();
+//        new GcmRegistrationAsyncTask(this).execute();
     }
 
     @Override
@@ -107,27 +106,27 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectImage() {
 
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery", "Cancel" };
+        final CharSequence[] options = { getResources().getString(R.string.take_photo), getResources().getString(R.string.choose_from_gallery), getResources().getString(R.string.cancel) };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Photo To Start!");
+        builder.setTitle(getResources().getString(R.string.add_photo_to_start));
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
+                if (options[item].equals(getResources().getString(R.string.take_photo)))
                 {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     startActivityForResult(intent, 1);
                 }
-                else if (options[item].equals("Choose from Gallery"))
+                else if (options[item].equals(getResources().getString(R.string.choose_from_gallery)))
                 {
                     Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
 
                 }
-                else if (options[item].equals("Cancel")) {
+                else if (options[item].equals(getResources().getString(R.string.cancel))) {
                     dialog.dismiss();
                 }
             }
