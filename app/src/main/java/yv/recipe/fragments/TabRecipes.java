@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import yv.recipe.R;
 
@@ -19,6 +22,8 @@ public class TabRecipes extends Fragment {
 
         final ImageView analyzeIcon = (ImageView) v.findViewById(R.id.analyze_icon);
         final ImageView viewImage = (ImageView) v.findViewById(R.id.image_placeholder);
+        final TextView analyzeText = (TextView) v.findViewById(R.id.analyze_text);
+        final ProgressWheel loader = (ProgressWheel) v.findViewById(R.id.analyze_progress);
 
         analyzeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,8 +31,11 @@ public class TabRecipes extends Fragment {
                 Snackbar.make(v, getResources().getString(R.string.analyze_photo), Snackbar.LENGTH_LONG).show();
 
                 analyzeIcon.setVisibility(View.GONE);
+                analyzeText.setVisibility(View.GONE);
 
-               analyzePhoto(viewImage);
+                loader.setVisibility(View.VISIBLE);
+
+                analyzePhoto(viewImage);
             }
         });
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto">
 
     <!--<ImageView-->
         <!--android:layout_width="200dp"-->
@@ -56,5 +57,28 @@
         android:gravity="bottom"
         android:visibility="invisible"
         android:id="@+id/analyze_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:text="start"
+        android:textColor="@color/LightTextColor"
+        android:id="@+id/analyze_text"
+        android:layout_centerInParent="true"
+        android:paddingTop="70dp" />
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/analyze_progress"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_vertical"
+        wheel:matProg_barColor="@color/ColorPrimaryLight"
+        wheel:matProg_progressIndeterminate="true"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

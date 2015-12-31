@@ -202,12 +202,14 @@ public class MainActivity extends AppCompatActivity implements ImageChooserListe
             public void run() {
                 ImageView userImage = (ImageView) findViewById(R.id.image_placeholder);
                 TextView uploadImage = (TextView) findViewById(R.id.noImageText);
+                TextView analyzeText = (TextView) findViewById(R.id.analyze_text);
                 ImageView analyzeIcon = (ImageView) findViewById(R.id.analyze_icon);
 
                 imageUri = Uri.parse(new File(image.getFileThumbnail()).toString());
                 userImage.setImageURI(Uri.parse(new File(image.getFileThumbnail()).toString()));
                 userImage.setVisibility(View.VISIBLE);
                 analyzeIcon.setVisibility(View.VISIBLE);
+                analyzeText.setVisibility(View.VISIBLE);
                 uploadImage.setVisibility(View.GONE);
 
                 // set grayscale
