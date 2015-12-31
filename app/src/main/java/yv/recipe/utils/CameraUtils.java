@@ -6,11 +6,6 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.opencv.android.Utils;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-
 public class CameraUtils {
 
     private static CameraUtils instance = null;
@@ -35,11 +30,10 @@ public class CameraUtils {
         return true;
     }
 
-    public void analyzeImage(Bitmap bitmap, ImageView viewImage) {
-        Mat mat = Mat.zeros(viewImage.getHeight(), viewImage.getWidth(), CvType.CV_8UC3);
-        Utils.bitmapToMat(bitmap, mat);
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2GRAY);
-        Utils.matToBitmap(mat, bitmap);
+
+
+    public void convertToGrayScale(Bitmap bitmap, ImageView viewImage) {
+        bitmap = ImageProccessingService.getInstance().convertToGrayScle(bitmap);
         viewImage.setImageBitmap(bitmap);
     }
 }

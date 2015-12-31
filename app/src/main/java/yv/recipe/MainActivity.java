@@ -1,24 +1,31 @@
 package yv.recipe;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.facebook.CallbackManager;
+import com.kbeanie.imagechooser.api.ChooserType;
+import com.kbeanie.imagechooser.api.ChosenImage;
+import com.kbeanie.imagechooser.api.ImageChooserListener;
+import com.kbeanie.imagechooser.api.ImageChooserManager;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -27,20 +34,20 @@ import org.opencv.android.OpenCVLoader;
 import java.io.File;
 
 import yv.recipe.adapters.ViewPagerAdapter;
-import yv.recipe.layouts.SlidingTabLayout;
+import yv.recipe.utils.CameraUtils;
 
 
-public class MainActivity extends ActionBarActivity {
-
-    // Declaring Your View and Variables
+public class MainActivity extends AppCompatActivity implements ImageChooserListener {
 
     Toolbar toolbar;
     ViewPager pager;
     ViewPagerAdapter adapter;
-    SlidingTabLayout tabs;
+    TabLayout tabs;
     ImageButton FAB;
-    CharSequence Titles[] = {"Recipes", "Popular"};
-    int Numboftabs = 2;
+    CharSequence tabsTitles[] = {"", ""};
+    private Uri imageUri;
+    private ImageChooserManager imageChooserManager;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,40 +55,87 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
+        tabsTitles[0] = getResources().getString(R.string.tab1_title);
+        tabsTitles[1] = getResources().getString(R.string.tab2_title);
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+        callbackManager = CallbackManager.Factory.create();
 
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, Numboftabs);
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(), tabsTitles, tabsTitles.length);
+
+
 
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
 
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        tabs.setDistributeEvenly(true);
+        tabs = (TabLayout) findViewById(R.id.tabs);
 
-        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.tabsScrollColor);
-            }
-        });
-
-        FAB = (ImageButton) findViewById(R.id.imageButton);
+        FAB = (FloatingActionButton) findViewById(R.id.fab);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                selectImage();
+                v.showContextMenu();
 
             }
         });
 
         // Setting the ViewPager For the SlidingTabsLayout
-        tabs.setViewPager(pager);
+        tabs.setupWithViewPager(pager);
+
+        unregisterForContextMenu(FAB);
+
+        registerForContextMenu(FAB);
 
 //        new GcmRegistrationAsyncTask(this).execute();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+//        menu.setHeaderTitle("Add Your Photo");
+        menu.add(1, 1, 1, getResources().getString(R.string.take_photo));
+        menu.add(1, 2, 2, getResources().getString(R.string.choose_from_gallery));
+        menu.add(1, 3, 3, getResources().getString(R.string.cancel));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        // case take photo selected
+        if(item.getItemId() == 1) {
+            try {
+                imageChooserManager = new ImageChooserManager(this, ChooserType.REQUEST_CAPTURE_PICTURE);
+                imageChooserManager.setImageChooserListener(this);
+                imageChooserManager.choose();
+            }
+            catch (Exception e) {
+                Snackbar.make(tabs, getResources().getString(R.string.error_take_photo), Snackbar.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+        // case select existing photo selected
+        else if(item.getItemId() == 2) {
+            try {
+                imageChooserManager = new ImageChooserManager(this, ChooserType.REQUEST_PICK_PICTURE);
+                imageChooserManager.setImageChooserListener(this);
+                imageChooserManager.choose();
+            }
+            catch (Exception e) {
+                Snackbar.make(tabs, getResources().getString(R.string.error_select_photo), Snackbar.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+        // case cancel selected
+        else if(item.getItemId() == 3) {
+            closeContextMenu();
+        }
+
+        return true;
     }
 
     @Override
@@ -104,79 +158,16 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void selectImage() {
-
-        final CharSequence[] options = { getResources().getString(R.string.take_photo), getResources().getString(R.string.choose_from_gallery), getResources().getString(R.string.cancel) };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.add_photo_to_start));
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals(getResources().getString(R.string.take_photo)))
-                {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, 1);
-                }
-                else if (options[item].equals(getResources().getString(R.string.choose_from_gallery)))
-                {
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
-
-                }
-                else if (options[item].equals(getResources().getString(R.string.cancel))) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        ImageView viewImage = (ImageView) findViewById(R.id.image_placeholder);
-        ImageView analyzeIcon = (ImageView) findViewById(R.id.analyze_icon);
+        if (resultCode == RESULT_OK &&
+                (requestCode == ChooserType.REQUEST_PICK_PICTURE ||
+                        requestCode == ChooserType.REQUEST_CAPTURE_PICTURE)) {
+            imageChooserManager.submit(requestCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-
-                    viewImage.setImageBitmap(bitmap);
-                    viewImage.setBackgroundResource(R.drawable.shape_view_border);
-                    analyzeIcon.setVisibility(View.VISIBLE);
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (requestCode == 2) {
-
-                Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
-                c.close();
-                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                viewImage.setImageBitmap(thumbnail);
-                analyzeIcon.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -203,4 +194,33 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
+
+    @Override
+    public void onImageChosen(final ChosenImage image) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageView userImage = (ImageView) findViewById(R.id.image_placeholder);
+                TextView uploadImage = (TextView) findViewById(R.id.noImageText);
+                ImageView analyzeIcon = (ImageView) findViewById(R.id.analyze_icon);
+
+                imageUri = Uri.parse(new File(image.getFileThumbnail()).toString());
+                userImage.setImageURI(Uri.parse(new File(image.getFileThumbnail()).toString()));
+                userImage.setVisibility(View.VISIBLE);
+                analyzeIcon.setVisibility(View.VISIBLE);
+                uploadImage.setVisibility(View.GONE);
+
+                // set grayscale
+                Drawable imgDrawable = userImage.getDrawable();
+                Bitmap bitmap = ((BitmapDrawable)imgDrawable).getBitmap();
+                CameraUtils.getInstance().convertToGrayScale(bitmap, userImage);
+            }
+        });
+
+    }
+
+    @Override
+    public void onError(String s) {
+
+    }
 }
