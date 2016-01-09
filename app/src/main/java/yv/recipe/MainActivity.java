@@ -150,11 +150,6 @@ public class MainActivity extends AppCompatActivity implements ImageChooserListe
 
         int id = item.getItemId();
 
-        // case camera icon clicked
-//        if (id == R.id.action_camera) {
-//            selectImage();
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
